@@ -104,6 +104,40 @@ cmake --build build
 
 ---
 
+## Benchmark
+
+```
+$ ./build/tests/test_aes_gcm_siv
+
+Encryption is working correctly
+
+AES-GCM-SIV Benchmark
+---------------------
+Message size : 1600000 bytes
+Iterations   : 1000
+
+Encryption:
+  Time       : 0.247 s
+  Throughput : 6476.628 MB/s (6.032 GiB/s)
+
+Decryption:
+  Time       : 0.242 s
+  Throughput : 6618.757 MB/s (6.164 GiB/s)
+
+Verification successful
+```
+
+**Platform**
+
+* CPU: Intel/AMD x86-64 with AES-NI and PCLMULQDQ
+* Compiler: GCC/Clang with `-O3`
+* Build type: `Release`
+* Message size: 1.6 MiB
+* Iterations: 1000
+
+> **Note:** Performance numbers are hardware-dependent and are provided for reference only.
+
+
 ## Requirements
 
 * C++23 compiler
