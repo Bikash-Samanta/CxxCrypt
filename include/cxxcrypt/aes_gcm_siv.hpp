@@ -26,16 +26,16 @@ using byte = std::byte;
 /// the caller's responsibility.
 
 [[nodiscard]] std::expected<std::size_t, Error> aes_gcm_siv_enc(
-    std::span<byte> plaintext,
-    std::span<byte> additional_data,
-    std::span<byte> key,
+    std::span<const byte> plaintext,
+    std::span<const byte> additional_data,
+    std::span<const byte> key,
     std::span<byte> ciphertext
 );
 
 [[nodiscard]] std::expected<std::size_t, Error> aes_gcm_siv_enc(
-    std::span<char> plaintext,
-    std::span<char> additional_data,
-    std::span<char> key,
+    std::span<const char> plaintext,
+    std::span<const char> additional_data,
+    std::span<const char> key,
     std::span<char> ciphertext
 );
 
@@ -52,16 +52,16 @@ using byte = std::byte;
 /// responsibility.
 
 [[nodiscard]] std::expected<std::size_t, Error> aes_gcm_siv_dec(
-    std::span<byte> ciphertext,
-    std::span<byte> additional_data,
-    std::span<byte> key,
+    std::span<const byte> ciphertext,
+    std::span<const byte> additional_data,
+    std::span<const byte> key,
     std::span<byte> plaintext
 );
 
 [[nodiscard]] std::expected<std::size_t, Error> aes_gcm_siv_dec(
-    std::span<char> ciphertext,
-    std::span<char> additional_data,
-    std::span<char> key,
+    std::span<const char> ciphertext,
+    std::span<const char> additional_data,
+    std::span<const char> key,
     std::span<char> plaintext
 );
 

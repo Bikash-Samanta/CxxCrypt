@@ -60,9 +60,9 @@ cxxcrypt_inline KeyPair derive_keys128(const __m128i aes_round_keys[11], const _
 
 
 cxxcrypt_inline __m128i generate_tag(
-    __m128i AK, __m128i nonce, std::span<__m128i> plaintext, std::span<__m128i> additional_data)
+    __m128i AK, const __m128i nonce, std::span<const __m128i> plaintext, std::span<const __m128i> additional_data)
 {
-    __m128i len_block = _mm_set_epi64x(
+    const __m128i len_block = _mm_set_epi64x(
         plaintext.size_bytes() * 8, additional_data.size_bytes() * 8
     );
 
@@ -83,10 +83,10 @@ cxxcrypt_inline __m128i generate_tag(
 
 
 cxxcrypt_inline __m128i aes_gcm_siv_encrypt(
-    __m128i round_keys_master[11],
-    __m128i nonce,
-    std::span<__m128i> additional_data,
-    std::span<__m128i> plaintext,
+    const __m128i round_keys_master[11],
+    const __m128i nonce,
+    std::span<const __m128i> additional_data,
+    std::span<const __m128i> plaintext,
     std::span<__m128i> output)
 {
     const auto [MAK, MEK] = derive_keys128(round_keys_master, nonce);
@@ -111,10 +111,10 @@ cxxcrypt_inline __m128i aes_gcm_siv_encrypt(
 
 
 cxxcrypt_inline bool aes_gcm_siv_decrypt(
-    __m128i round_keys_master[11],
-    __m128i nonce,
-    std::span<__m128i> additional_data,
-    std::span<__m128i> input,
+    const __m128i round_keys_master[11],
+    const __m128i nonce,
+    std::span<const __m128i> additional_data,
+    std::span<const __m128i> input,
     std::span<__m128i> output)
 {
     const auto [MAK, MEK] = derive_keys128(round_keys_master, nonce);
@@ -122,21 +122,21 @@ cxxcrypt_inline bool aes_gcm_siv_decrypt(
     __m128i _Tag = input[0];
     __m128i _Ctr = _mm_or_si128(_Tag, _settop);
 
-    std::span<__m128i> ciphertext = input.subspan(1);
+    std::span<const __m128i> ciphertext = input.subspan(1);
 
-    static __m128i aes_round_keys_mek_dec[11];
+    alignas(16) __m128i aes_round_keys_mek_dec[11];
     aes_generate_round_keys_enc(MEK, aes_round_keys_mek_dec);
 
     aes_ctr_decrypt(aes_round_keys_mek_dec,_Ctr, ciphertext, output);
 
     __m128i S = generate_tag(MAK, nonce, output, additional_data);
 
-    static __m128i aes_round_keys_mek[11];
+    alignas(16) __m128i aes_round_keys_mek[11];
     aes_generate_round_keys_enc(MEK, aes_round_keys_mek);
 
-    __m128i expectedTag = aes_encrypt_block(S, aes_round_keys_mek);
+    const __m128i expectedTag = aes_encrypt_block(S, aes_round_keys_mek);
 
-    __m128i diff = _mm_xor_si128(_Tag, expectedTag);
+    const __m128i diff = _mm_xor_si128(_Tag, expectedTag);
 
     return _mm_testz_si128(diff, diff);
 

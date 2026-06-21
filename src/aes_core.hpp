@@ -104,7 +104,7 @@ cxxcrypt_inline __m128i aes_decrypt_block(__m128i block, const __m128i aes_round
 
 
 cxxcrypt_inline void aes_ctr_encrypt(
-    __m128i aes_round_keys_enc[11],
+    const __m128i aes_round_keys_enc[11],
     __m128i cb,
     std::span<const __m128i> input,
     std::span<__m128i> output)
@@ -122,7 +122,7 @@ cxxcrypt_inline void aes_ctr_encrypt(
 
 
 cxxcrypt_inline void aes_ctr_decrypt(
-    __m128i aes_round_keys_enc[11],
+    const __m128i aes_round_keys_enc[11],
     __m128i cb,
     std::span<const __m128i> input,
     std::span<__m128i> output)
